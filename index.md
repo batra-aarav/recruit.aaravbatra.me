@@ -28,3 +28,13 @@ Bench Press (1 rep max): 185 lbs
 Squat (1 rep max, full range of motion): 275 lbs
 
 Deadlift (1 rep max): 315 lbs
+
+Hudl: https://www.hudl.com/profile/18010632/Aarav-Batra
+
+YouTube: NA
+
+X (Twitter): https://x.com/aaravbatra_56
+
+Instagram: https://www.instagram.com/aaravbatra_56
+
+LinkedIn: https://www.linkedin.com/in/aarav-batra-a0abaa2a4
