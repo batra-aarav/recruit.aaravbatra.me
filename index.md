@@ -3,38 +3,38 @@ title: Recruiting Profile
 ---
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c7e52d40a1e444ccb2ca2872514944cc"}'></script>
 
-Full Name: Aarav Batra
+Full Name: **Aarav Batra**
 
-High School: East Brunswick High School, New Jersey
+High School: **East Brunswick High School, New Jersey**
 
-Class: 2025
+Class: **2025**
 
-Conference: Greater Middlesex Conference (GMC) Big Central
+Conference: **Greater Middlesex Conference (GMC) Big Central**
 
-Division: National Gold Division
+Division: **National Gold Division**
 
-Offensive Position: Quarterback
+Offensive Position: **Quarterback**
 
-Special Teams: Long Snapper
+Special Teams: **Long Snapper**
 
-Height: 6' 3"
+Height: **6' 3"**
 
-Weight: 210 Lbs
+Weight: **210 lbs**
 
-40 Yard Dash: 5.2 seconds
+40 Yard Dash: **5.2 seconds**
 
-Bench Press (1 rep max): 185 lbs
+Bench Press (1 rep max): **185 lbs**
 
-Squat (1 rep max, full range of motion): 275 lbs
+Squat (1 rep max, full range of motion): **275 lbs**
 
-Deadlift (1 rep max): 315 lbs
+Deadlift (1 rep max): **315 lbs**
 
-Hudl: https://www.hudl.com/profile/18010632/Aarav-Batra
+Hudl: (**hudl.com/profile/18010632/Aarav-Batra**)[https://www.hudl.com/profile/18010632/Aarav-Batra]
 
 YouTube: NA
 
-X (Twitter): https://x.com/aaravbatra_56
+X (Twitter): (**x.com/aaravbatra_56**)[https://x.com/aaravbatra_56]
 
-Instagram: https://www.instagram.com/aaravbatra_56
+Instagram: (**instagram.com/aaravbatra_56**)[https://www.instagram.com/aaravbatra_56]
 
-LinkedIn: https://www.linkedin.com/in/aarav-batra-a0abaa2a4
+LinkedIn: (**linkedin.com/in/aarav-batra-a0abaa2a4**)[https://www.linkedin.com/in/aarav-batra-a0abaa2a4]
