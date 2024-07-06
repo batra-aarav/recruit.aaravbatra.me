@@ -29,7 +29,7 @@ Squat (1 rep max, full range of motion): **275 lbs**
 
 Deadlift (1 rep max): **315 lbs**
 
-Hudl: [**hudl.com/profile/18010632/Aarav-Batra**](https://www.hudl.com/profile/18010632/Aarav-Batra}
+Hudl: [**hudl.com/profile/18010632/Aarav-Batra**](https://www.hudl.com/profile/18010632/Aarav-Batra)
 
 YouTube: NA
 
