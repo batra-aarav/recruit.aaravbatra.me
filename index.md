@@ -31,7 +31,7 @@ Deadlift (1 rep max): **315 lbs**
 
 Hudl: [**hudl.com/profile/18010632/Aarav-Batra**](https://www.hudl.com/profile/18010632/Aarav-Batra)
 
-YouTube: NA
+<!--YouTube: **NA**-->
 
 X (Twitter): [**x.com/aaravbatra_56**](https://x.com/aaravbatra_56)
 
