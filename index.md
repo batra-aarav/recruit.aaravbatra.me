@@ -11,7 +11,7 @@ Class: **2025**
 
 Conference: **Big Central Conference (BCC)**
 
-Division: **National Gold Division**
+Division: **National Gold**
 
 Offensive Position: **Quarterback**
 
