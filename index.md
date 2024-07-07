@@ -9,7 +9,7 @@ High School: **East Brunswick High School, New Jersey**
 
 Class: **2025**
 
-Conference: **Greater Middlesex Conference (GMC) Big Central**
+Conference: **Big Central Conference (BCC)**
 
 Division: **National Gold Division**
 
