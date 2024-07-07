@@ -1,13 +1,13 @@
 # ----
 # Site
 
-title: Aarav Batra Recruiting
+title: Aarav Batra
 url: "https://recruit.aaravbatra.me"
 show_full_navigation: true
 
 # Values for the jekyll-seo-tag gem (https://github.com/jekyll/jekyll-seo-tag)
 logo: /siteicon.png
-description: Aarav Batra Recruiting and Recruiting Profile
+description: Aarav Batra's Recruiting Profile
 author:
   name: Aarav Batra
   email: aaravbatra@duck.com
