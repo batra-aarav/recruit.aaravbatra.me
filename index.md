@@ -23,15 +23,15 @@ High School: **East Brunswick High School, New Jersey**
 
 Class: **2025**
 
-GPA: Click Here
+GPA: [**Click Here**](https://recruit.aaravbatra.me/academics/transcript)
 
-Transcript: Click Here
+Transcript: [**Click Here**](https://recruit.aaravbatra.me/academics/transcript)
 
-SAT EVBRW (English): Click Here
+SAT EVBRW (English): [**Click Here**](https://recruit.aaravbatra.me/academics/SAT-Scores)
 
-SAT Math: Click Here
+SAT Math: [**Click Here**](https://recruit.aaravbatra.me/academics/SAT-Scores)
 
-SAT Composite Score: Click Here
+SAT Composite Score: [**Click Here**](https://recruit.aaravbatra.me/academics/SAT-Scores)
 
 Academic Honors: **Student of the Month, Honor Roll, and the East Brunswick Education Foundation (EBEF) Butterfly Project Award**
 
