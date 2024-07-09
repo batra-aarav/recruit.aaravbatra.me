@@ -8,9 +8,9 @@ title: Recruiting Profile
 
 Full Name: **Aarav Batra**
 
-Email: **aaravbatra@duck.com**
+Email: [**aaravbatra@duck.com**](mailto:aaravbatra@duck.com)
 
-Phone Number: **+1 848-448-6348**
+Phone Number: [**+1 848-448-6348**](tel:1848-448-6348)
 
 X (Twitter): [**x.com/aaravbatra_56**](x.aaravbatra.me)
 
