@@ -65,7 +65,7 @@ Recruiting Videos: [**youtube.com/channel/UCIfR3bSAgrOTmPGdOCGGj-Q**](https://yo
 
 Hudl: [**hudl.com/profile/18010632/Aarav-Batra**](https://hudl.aaravbatra.me)
 
-YouTube: [**[youtube.com/@AaravBatraFootball**](https://youtube.aaravbatra.me)
+YouTube: [**youtube.com/@AaravBatraFootball**](https://youtube.aaravbatra.me)
 
 X (Twitter): [**x.com/aaravbatra_12**](https://x.aaravbatra.me)
 
