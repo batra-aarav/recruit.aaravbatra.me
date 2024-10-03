@@ -12,7 +12,7 @@ Email: [**aaravbatra@duck.com**](mailto:aaravbatra@duck.com)
 
 Phone Number: [**+1 (848) 448-6348**](tel:1848-448-6348)
 
-X (Twitter): [**x.com/aaravbatra_12**](https://x.aaravbatra.me)
+X (Twitter): [**x.com/AaravBatra_12**](https://x.aaravbatra.me)
 
 Head Coach: **Matthew Pazinko**
 
@@ -67,8 +67,8 @@ Hudl: [**hudl.com/profile/18010632/Aarav-Batra**](https://hudl.aaravbatra.me)
 
 YouTube: [**youtube.com/@AaravBatraFootball**](https://youtube.aaravbatra.me)
 
-X (Twitter): [**x.com/aaravbatra_12**](https://x.aaravbatra.me)
+X (Twitter): [**x.com/AaravBatra_12**](https://x.aaravbatra.me)
 
-Instagram: [**instagram.com/aaravbatra_12**](https://instagram.aaravbatra.me)
+Instagram: [**instagram.com/AaravBatra_12**](https://instagram.aaravbatra.me)
 
-LinkedIn: [**linkedin.com/in/aarav-batra-a0abaa2a4**](https://linkedin.aaravbatra.me)
+LinkedIn: [**linkedin.com/in/AaravBatra**](https://linkedin.aaravbatra.me)
