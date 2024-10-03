@@ -58,7 +58,7 @@ Deadlift (1 rep max): **315 lbs**
 
 Recruiting Videos: [**hudl.com/profile/18010632/Aarav-Batra**](https://hudl.aaravbatra.me)
 
-Recruiting Videos: [**youtube.com/channel/UCIfR3bSAgrOTmPGdOCGGj-Q**](https://youtube.aaravbatra.me)
+Recruiting Videos: [**youtube.com/@AaravBatraFootball**](https://youtube.aaravbatra.me)
 
 
 ## Socials
