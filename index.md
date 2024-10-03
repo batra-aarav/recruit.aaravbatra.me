@@ -12,7 +12,7 @@ Email: [**aaravbatra@duck.com**](mailto:aaravbatra@duck.com)
 
 Phone Number: [**+1 (848) 448-6348**](tel:1848-448-6348)
 
-X (Twitter): [**x.com/aaravbatra_12**](x.aaravbatra.me)
+X (Twitter): [**x.com/aaravbatra_12**](https://x.aaravbatra.me)
 
 Head Coach: **Matthew Pazinko**
 
