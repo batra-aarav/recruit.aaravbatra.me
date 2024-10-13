@@ -27,11 +27,11 @@ GPA: [**Click Here**](https://recruit.aaravbatra.me/academics/transcript)
 
 Transcript: [**Click Here**](https://recruit.aaravbatra.me/academics/transcript)
 
-SAT EVBRW (English): [**Click Here**](https://recruit.aaravbatra.me/academics/SAT-Scores)
+SAT EVBRW (English): [**Click Here**](https://recruit.aaravbatra.me/academics/sat-scores)
 
-SAT Math: [**Click Here**](https://recruit.aaravbatra.me/academics/SAT-Scores)
+SAT Math: [**Click Here**](https://recruit.aaravbatra.me/academics/sat-scores)
 
-SAT Composite Score: [**Click Here**](https://recruit.aaravbatra.me/academics/SAT-Scores)
+SAT Composite Score: [**Click Here**](https://recruit.aaravbatra.me/academics/sat-scores)
 
 Academic Honors: **Silver Honor Roll and Student of the Month**
 
