@@ -33,7 +33,7 @@ SAT Math: [**Click Here**](https://recruit.aaravbatra.me/academics/sat-scores)
 
 SAT Composite Score: [**Click Here**](https://recruit.aaravbatra.me/academics/sat-scores)
 
-Academic Honors: **Silver Honor Roll and Student of the Month**
+Academic Honors: **Honor Roll and Student of the Month**
 
 NCAA ID Number: **2409420920**
 
