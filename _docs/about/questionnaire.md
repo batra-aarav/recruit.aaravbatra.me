@@ -4,9 +4,6 @@ category: About
 order: 3
 ---
 
-<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "fd8791c8dc3945daa7bbdc9edf7c41e9"}'></script>
-
-
 ## Personal Information
 
 Full Name: **Aarav Batra**
