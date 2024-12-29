@@ -1,5 +1,5 @@
-const burger = document.getElementById('navbar-container'); // The hamburger button
-const menu = document.querySelector('.navbar-items-c'); // The menu container
+const burger = document.getElementById('navbar-container');
+const menu = document.querySelector('.navbar-items-c');
 
 burger.addEventListener('click', () => {
     menu.classList.toggle('active');
