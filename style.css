@@ -160,7 +160,7 @@ body {
 
 .navbar-items-c {
     display: inline-block;
-    float: right;
+    /* float: right; */
 }
 
 .navbar-container::after {
