@@ -1,4 +1,4 @@
-const burger = document.getElementById('id7a7l'); // The hamburger button
+const burger = document.getElementById('navbar-container'); // The hamburger button
 const menu = document.querySelector('.navbar-items-c'); // The menu container
 
 burger.addEventListener('click', () => {
