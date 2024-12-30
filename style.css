@@ -1,8 +1,9 @@
+/* Global Styles */
 * {
     box-sizing: border-box;
 }
 
-body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi{
+body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     background-image: linear-gradient(#36393f 1%, #36393f 100%);
@@ -14,6 +15,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi{
     color: #475569;
 }
 
+/* Common Components */
 .heading {
     margin: 0;
     color: rgba(29, 40, 55, 1);
@@ -106,6 +108,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi{
     border-radius: 10px;
 }
 
+/* Navigation Bar Styles */
 .navbar {
     background-color: #222;
     color: #ddd;
@@ -174,23 +177,20 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi{
     margin-bottom: 5px;
 }
 
+/* Header/Hero Section IDs */
 #i8h6gn, #irjua, #i2z4yd, #iwrtww, #iw0e0p, #iewup7 {
     font-size: 3rem;
     text-align: center;
     color: #ffffff;
 }
 
+/* Feature Section IDs */
 #i5bcda, #ia5d7b, #ix35a6, #iroa68, #i8jeuj, #ita48s, #i7owfh, 
 #ircysl, #i32om3, #iosbyf, #iqza0j, #ifme48 {
     color: #1c4508;
 }
 
-#i5e5pn {
-    font-size: 3rem;
-    text-align: center;
-    color:#1c4508;
-}
-
+/* Content Section Containers */
 #iag9m4, #iycz3, #i58brp, #ioy6uk, #isi0tr, #ivxs8n {
     max-width: 1200px;
     align-items: center;
@@ -213,7 +213,10 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi{
     border-bottom-left-radius: 50px;
 }
 
-#im7xhi, #izmb4a, #i3d1yz, #img9sz, #iwb9sk, #igej5k, #iz29ek, #feature-section, #irz7b, #ivh69t, #iiaf2e, #inzrq8, #itvpo1, #ivub05, #id8xfs, #iywb2q, #iffyvh, #in1iuf{
+/* Main Section Wrappers */
+#im7xhi, #izmb4a, #i3d1yz, #img9sz, #iwb9sk, #igej5k, #iz29ek, 
+#feature-section, #irz7b, #ivh69t, #iiaf2e, #inzrq8, #itvpo1, 
+#ivub05, #id8xfs, #iywb2q, #iffyvh, #in1iuf {
     justify-content: center;
     padding-top: 80px;
     padding-bottom: 80px;
@@ -227,13 +230,17 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi{
     background-origin: padding-box;
 }
 
-#i6ca9f, #igqj95, #i6m2mf, #ivl6rh, #ifw58b, #ivez8j, #id1t3y, #i6rp8q, #ihs4lb, #iu9a03, #ij43ag, #i1r15h {
+/* Text Content IDs */
+#i6ca9f, #igqj95, #i6m2mf, #ivl6rh, #ifw58b, #ivez8j, #id1t3y, 
+#i6rp8q, #ihs4lb, #iu9a03, #ij43ag, #i1r15h {
     font-size: 1.2rem;
     margin-bottom: 15px;
     color: #ffffff;
 }
 
-#il3p65, #ilzhuj, #ijlraj, #ixip2w, #ibhyqq, #i7510p, #ixr00j, #ixs9p4, #iw8t5j, #iykhok, #i6dsxt {
+/* Section Headings */
+#il3p65, #ilzhuj, #ijlraj, #ixip2w, #ibhyqq, #i7510p, #ixr00j, 
+#ixs9p4, #iw8t5j, #iykhok, #i6dsxt {
     font-size: 2.5rem;
     color: #ffffff;
 }
@@ -362,11 +369,10 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi{
     color: #ffffff;
 }
 
-#i55kbt {
-    max-width: 615px;
-    width: 615px;
-    max-height: 615px;
+/* Media Section IDs */
+#i55kbt, #iyb0c7 {
     height: 350px;
+    width: 615px;
 }
 
 #icy0tt {
@@ -471,6 +477,16 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi{
     text-align: start;
 }
 
+/* Footer Section IDs */
+#ie7uxx, #iek0kb, #im7zqg, #itv0ho, #i46vmh, #i8qzpm {
+    padding: 10px;
+    text-align: center;
+    font-size: 0.8rem;
+    margin-top: 20px;
+    opacity: 75%;
+    color: #fff;
+}
+
 #isxv5c, #is1wi3 , #i3ykbu, #i0e0va, #i3t5fi, #inzoj6 {
     color: #57F287;
 }
@@ -500,13 +516,21 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi{
     margin-bottom: 10px;
 }
 
-#ie7uxx, #iek0kb, #im7zqg, #itv0ho, #i46vmh, #i8qzpm {
-    padding: 10px;
-    text-align: center;
-    font-size: 0.8rem;
-    margin-top: 20px;
-    opacity: 75%;
-    color: #fff;
+/* YouTube Container */
+#youtube {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    padding-top: 56.25%;
+}
+
+#youtube iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 #inzaq5, #iyt31a, #i0a0sx, #ibavwh, #ipv8r8, #izj3mx {
@@ -535,27 +559,11 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi{
     align-self: center;
 }
 
-#youtube {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    position: relative;
-    padding-top: 56.25%;
-}
-
-#youtube iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-
 #ip05eo {
     color:#1c4508;
 }
 
+/* Media Queries */
 @media (max-width: 992px) {
     .grid-row {
         flex-direction: column;
