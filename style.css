@@ -224,6 +224,7 @@ body {
 #i5e5pn {
     font-size: 3rem;
     text-align: center;
+    color:#1c4508;
 }
 
 #iag9m4 {
@@ -2355,6 +2356,10 @@ body {
     height: 100%;
 }
 
+
+#ip05eo {
+    color:#1c4508;
+}
 
 @media (max-width: 992px) {
     .grid-row {
