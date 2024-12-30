@@ -1,4 +1,4 @@
-const burger = document.getElementById('navbar-container');
+const burger = document.querySelector('.navbar-burger');
 const menu = document.querySelector('.navbar-items-c');
 
 burger.addEventListener('click', () => {
