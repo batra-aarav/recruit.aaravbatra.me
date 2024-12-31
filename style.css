@@ -603,7 +603,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
     transition: all 0.4s ease;
 }
 
-.youtube-player img:hover {
+.youtube-player:hover img {
     filter: brightness(75%);
 }
 
@@ -618,6 +618,8 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
     background: url("./images/youtube.png") no-repeat center;
     background-size: contain;
     cursor: pointer;
+    z-index: 2;
+    pointer-events: none;
 }
 
 .youtube-player .video-title-overlay img {
