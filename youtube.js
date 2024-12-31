@@ -1,150 +1,144 @@
-/*
- * Light YouTube Embeds by @labnol
- * Credit: https://www.labnol.org/
+/** @typedef {Object} VideoInfo
+ * @property {string} thumbnailUrl
+ * @property {string} title
  */
 
-function labnolIframe(div) {
-    var iframe = document.createElement('iframe');
-    var videoId = div.dataset.id;
-    var embedUrl = div.dataset.type === 'playlist' 
-        ? 'https://www.youtube.com/embed/videoseries?list=' + videoId
-        : 'https://www.youtube.com/embed/' + videoId;
-    
-    // Add mute=1 to enable autoplay on mobile
-    iframe.setAttribute('src', embedUrl + '&autoplay=1&rel=0&mute=1');
-    iframe.setAttribute('frameborder', '0');
-    iframe.setAttribute('allowfullscreen', '1');
-    iframe.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
-    
-    // Unmute after a short delay to ensure autoplay works
-    setTimeout(() => {
-        iframe.src = embedUrl + '&autoplay=1&rel=0';
-    }, 1000);
-    
-    div.parentNode.replaceChild(iframe, div);
-}
+const CONFIG = {
+    API_KEYS: {
+        RESTRICTED: 'AIzaSyAP5S1cb4P3HYlc0gGcxZGcv2-mlQwXc-8',
+        ENV_FILE: './TOKEN.env'
+    },
+    API_ENDPOINTS: {
+        PLAYLIST_ITEMS: 'https://www.googleapis.com/youtube/v3/playlistItems',
+        VIDEOS: 'https://www.googleapis.com/youtube/v3/videos'
+    },
+    DEFAULTS: {
+        FALLBACK_THUMBNAIL: 'https://img.youtube.com/vi/jF-yxeyEhsM/maxresdefault.jpg',
+        FALLBACK_TITLE: 'Video Unavailable'
+    }
+};
 
-async function getApiKey() {
-    // First try the hardcoded API key that's IP restricted
-    const restrictedApiKey = 'AIzaSyAP5S1cb4P3HYlc0gGcxZGcv2-mlQwXc-8';
-    
-    // Test if the restricted key works
-    try {
-        const testResponse = await fetch(
-            `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=1&playlistId=ANY_ID&key=${restrictedApiKey}`
-        );
-        if (testResponse.ok) {
-            return restrictedApiKey;
+class YouTubeService {
+    static async getApiKey() {
+        try {
+            // Try restricted key first
+            const testResponse = await fetch(
+                `${CONFIG.API_ENDPOINTS.VIDEOS}?part=snippet&id=jF-yxeyEhsM&key=${CONFIG.API_KEYS.RESTRICTED}`
+            );
+            const data = await testResponse.json();
+            if (!data.error) return CONFIG.API_KEYS.RESTRICTED;
+            
+            // Fallback to env file
+            const response = await fetch(CONFIG.API_KEYS.ENV_FILE);
+            const text = await response.text();
+            return text.match(/YOUTUBE_API_KEY=(.+)/)[1].trim();
+        } catch (error) {
+            console.error('API key fetch failed:', error);
+            return null;
         }
-    } catch (e) {
-        console.log('Restricted API key failed, trying fallback...');
     }
 
-    // If restricted key doesn't work, try reading from TOKEN.env
-    try {
-        const response = await fetch('./TOKEN.env');
-        const text = await response.text();
-        const key = text.match(/YOUTUBE_API_KEY=(.+)/)[1];
-        return key.trim();
-    } catch (error) {
-        console.error('Error loading API key:', error);
-        return null;
+    static async getFirstVideoFromPlaylist(playlistId) {
+        try {
+            const apiKey = await this.getApiKey();
+            if (!apiKey) throw new Error('No API key available');
+
+            // Get first video from playlist
+            const playlistResponse = await fetch(
+                `${CONFIG.API_ENDPOINTS.PLAYLIST_ITEMS}?part=snippet&maxResults=1&playlistId=${playlistId}&key=${apiKey}`
+            );
+            const playlistData = await playlistResponse.json();
+            
+            if (!playlistData.items?.[0]) throw new Error('No videos in playlist');
+
+            const videoId = playlistData.items[0].snippet.resourceId.videoId;
+
+            // Get high quality thumbnail
+            const videoResponse = await fetch(
+                `${CONFIG.API_ENDPOINTS.VIDEOS}?part=snippet&id=${videoId}&key=${apiKey}`
+            );
+            const { items: [{ snippet }] } = await videoResponse.json();
+
+            return {
+                thumbnailUrl: snippet.thumbnails.maxres?.url || 
+                             snippet.thumbnails.standard?.url ||
+                             snippet.thumbnails.high.url,
+                title: snippet.title
+            };
+        } catch (error) {
+            console.error('Playlist fetch failed:', error);
+            return {
+                thumbnailUrl: CONFIG.DEFAULTS.FALLBACK_THUMBNAIL,
+                title: CONFIG.DEFAULTS.FALLBACK_TITLE
+            };
+        }
     }
 }
 
-async function getFirstVideoFromPlaylist(playlistId) {
-    try {
-        const apiKey = await getApiKey();
-        if (!apiKey) throw new Error('No API key found');
-        
-        // First get the playlist items to get the first video ID
-        const playlistResponse = await fetch(
-            `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=1&playlistId=${playlistId}&key=${apiKey}`
-        );
-        const playlistData = await playlistResponse.json();
-        
-        if (!playlistData.items || !playlistData.items.length) {
-            throw new Error('No videos in playlist');
-        }
+class YouTubePlayer {
+    static createIframe(videoId, type) {
+        const iframe = document.createElement('iframe');
+        const embedUrl = type === 'playlist' 
+            ? `https://www.youtube.com/embed/videoseries?list=${videoId}`
+            : `https://www.youtube.com/embed/${videoId}`;
 
-        const firstVideo = playlistData.items[0].snippet;
-        const videoId = firstVideo.resourceId.videoId;
+        iframe.setAttribute('src', `${embedUrl}&autoplay=1&rel=0&mute=1`);
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allowfullscreen', '1');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
 
-        // Get the video details for higher quality thumbnail
-        const videoResponse = await fetch(
-            `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${apiKey}`
-        );
-        const videoData = await videoResponse.json();
-        const videoSnippet = videoData.items[0].snippet;
+        // Unmute after delay for autoplay
+        setTimeout(() => {
+            iframe.src = `${embedUrl}&autoplay=1&rel=0`;
+        }, 1000);
 
-        return {
-            thumbnailUrl: videoSnippet.thumbnails.maxres?.url || 
-                         videoSnippet.thumbnails.standard?.url ||
-                         videoSnippet.thumbnails.high.url,
-            title: videoSnippet.title
+        return iframe;
+    }
+
+    static async createThumbnail(videoId, type) {
+        const div = document.createElement('div');
+        div.dataset.id = videoId;
+        div.dataset.type = type;
+
+        const videoInfo = type === 'playlist'
+            ? await YouTubeService.getFirstVideoFromPlaylist(videoId)
+            : { 
+                thumbnailUrl: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+                title: 'Video'
+              };
+
+        div.innerHTML = `
+            <img src="${videoInfo.thumbnailUrl}">
+            <div class="thumbnail-shadow"></div>
+            <div class="video-title-overlay">
+                <img src="./images/youtube-pfp.png">
+                <span>${videoInfo.title}</span>
+            </div>
+            <div class="play"></div>
+        `;
+
+        div.onclick = () => {
+            const iframe = this.createIframe(videoId, type);
+            div.parentNode.replaceChild(iframe, div);
         };
-    } catch (error) {
-        console.error('Error fetching playlist:', error);
-        return {
-            thumbnailUrl: 'https://img.youtube.com/vi/jF-yxeyEhsM/maxresdefault.jpg',
-            title: 'Playlist Unavailable'
-        };
+
+        return div;
     }
 }
 
 async function initYouTubeVideos() {
-    var playerElements = document.getElementsByClassName('youtube-player');
-    for (var n = 0; n < playerElements.length; n++) {
-        var videoId = playerElements[n].dataset.id;
-        var isPlaylist = playerElements[n].dataset.type === 'playlist';
-        var div = document.createElement('div');
-        div.setAttribute('data-id', videoId);
-        div.setAttribute('data-type', isPlaylist ? 'playlist' : 'video');
+    const players = document.getElementsByClassName('youtube-player');
+    
+    for (const player of players) {
+        const videoId = player.dataset.id;
+        const type = player.dataset.type || 'video';
         
-        var thumbNode = document.createElement('img');
-        let videoTitle;
+        const thumbnail = await YouTubePlayer.createThumbnail(videoId, type);
         
-        if (isPlaylist) {
-            const videoInfo = await getFirstVideoFromPlaylist(videoId);
-            thumbNode.src = videoInfo.thumbnailUrl;
-            videoTitle = videoInfo.title;
-        } else {
-            thumbNode.src = 'https://img.youtube.com/vi/' + videoId + '/maxresdefault.jpg';
-            videoTitle = 'Video';
+        if (player.children.length) {
+            player.removeChild(player.firstChild);
         }
-        div.appendChild(thumbNode);
-        
-        // Add shadow overlay
-        var shadowOverlay = document.createElement('div');
-        shadowOverlay.className = 'thumbnail-shadow';
-        div.appendChild(shadowOverlay);
-        
-        // Add title overlay
-        var titleDiv = document.createElement('div');
-        titleDiv.className = 'video-title-overlay';
-        
-        var favicon = document.createElement('img');
-        favicon.src = './images/youtube-pfp.png';
-        titleDiv.appendChild(favicon);
-        
-        var titleSpan = document.createElement('span');
-        titleSpan.textContent = videoTitle;
-        titleDiv.appendChild(titleSpan);
-        
-        div.appendChild(titleDiv);
-        
-        var playButton = document.createElement('div');
-        playButton.setAttribute('class', 'play');
-        div.appendChild(playButton);
-        
-        div.onclick = function() {
-            labnolIframe(this);
-        };
-        
-        if (playerElements[n].children.length) {
-            playerElements[n].removeChild(playerElements[n].firstChild);
-        }
-        playerElements[n].appendChild(div);
+        player.appendChild(thumbnail);
     }
 }
 
