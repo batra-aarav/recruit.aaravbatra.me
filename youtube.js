@@ -1,19 +1,10 @@
 /**
  * @typedef {Object} VideoInfo
- * @property {string} thumbnailUrl - URL of the video thumbnail
- * @property {string} title - Title of the video
- * @property {string} [videoId] - YouTube video ID
+ * @property {string} thumbnailUrl
+ * @property {string} title
  */
 
 const CONFIG = {
-    API_KEYS: {
-        RESTRICTED: 'AIzaSyAP5S1cb4P3HYlc0gGcxZGcv2-mlQwXc-8',
-        ENV_FILE: './TOKEN.env'
-    },
-    API_ENDPOINTS: {
-        PLAYLIST_ITEMS: 'https://www.googleapis.com/youtube/v3/playlistItems',
-        VIDEOS: 'https://www.googleapis.com/youtube/v3/videos'
-    },
     DEFAULTS: {
         FALLBACK_THUMBNAIL: 'https://img.youtube.com/vi/jF-yxeyEhsM/maxresdefault.jpg',
         FALLBACK_TITLE: 'Aarav Batra | Long Snapping Highlight Tape | Class of 2025 | East Brunswick High School'
@@ -27,65 +18,6 @@ class DeviceDetector {
 
     static isIOS() {
         return /iPhone|iPad|iPod/.test(navigator.userAgent);
-    }
-}
-
-class YouTubeAPI {
-    static async getApiKey() {
-        try {
-            const testResponse = await fetch(
-                `${CONFIG.API_ENDPOINTS.VIDEOS}?part=snippet&id=jF-yxeyEhsM&key=${CONFIG.API_KEYS.RESTRICTED}`
-            );
-            const data = await testResponse.json();
-            if (!data.error) return CONFIG.API_KEYS.RESTRICTED;
-            
-            const response = await fetch(CONFIG.API_KEYS.ENV_FILE);
-            const text = await response.text();
-            const match = text.match(/YOUTUBE_API_KEY=(.+)/);
-            return match ? match[1].trim() : null;
-        } catch (error) {
-            console.error('[YouTubeAPI] Key fetch failed:', error);
-            return null;
-        }
-    }
-
-    static async fetchVideoInfo(videoId, apiKey) {
-        const response = await fetch(
-            `${CONFIG.API_ENDPOINTS.VIDEOS}?part=snippet&id=${videoId}&key=${apiKey}`
-        );
-        const data = await response.json();
-        if (!data.items?.[0]) throw new Error('Video not found');
-        return data.items[0].snippet;
-    }
-
-    static async getFirstPlaylistVideo(playlistId) {
-        try {
-            const apiKey = await this.getApiKey();
-            if (!apiKey) throw new Error('No API key available');
-
-            const playlistResponse = await fetch(
-                `${CONFIG.API_ENDPOINTS.PLAYLIST_ITEMS}?part=snippet&maxResults=1&playlistId=${playlistId}&key=${apiKey}`
-            );
-            const playlistData = await playlistResponse.json();
-            if (!playlistData.items?.[0]) throw new Error('Empty playlist');
-
-            const videoId = playlistData.items[0].snippet.resourceId.videoId;
-            const snippet = await this.fetchVideoInfo(videoId, apiKey);
-
-            return {
-                thumbnailUrl: snippet.thumbnails.maxres?.url || 
-                             snippet.thumbnails.standard?.url ||
-                             snippet.thumbnails.high.url,
-                title: snippet.title,
-                videoId
-            };
-        } catch (error) {
-            console.error('[YouTubeAPI] Playlist fetch failed:', error);
-            return {
-                thumbnailUrl: CONFIG.DEFAULTS.FALLBACK_THUMBNAIL,
-                title: CONFIG.DEFAULTS.FALLBACK_TITLE
-            };
-        }
     }
 }
 
@@ -164,12 +96,14 @@ class YouTubeEmbed {
         const container = document.createElement('div');
         Object.assign(container.dataset, { id: videoId, type });
 
-        const videoInfo = type === 'playlist'
-            ? await YouTubeAPI.getFirstPlaylistVideo(videoId)
-            : { 
-                thumbnailUrl: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
-                title: 'Video'
-              };
+        const videoInfo = {
+            thumbnailUrl: type === 'playlist' 
+                ? CONFIG.DEFAULTS.FALLBACK_THUMBNAIL 
+                : `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+            title: type === 'playlist' 
+                ? CONFIG.DEFAULTS.FALLBACK_TITLE 
+                : 'Video'
+        };
 
         container.innerHTML = this.getThumbnailHTML(videoInfo);
         container.onclick = () => this.handleThumbnailClick(container, videoId, type);
@@ -237,7 +171,6 @@ async function initYouTubeVideos() {
     for (const player of players) {
         const { id: videoId, type = 'video' } = player.dataset;
         
-        // Create iframe directly for mobile devices
         if (DeviceDetector.isMobile()) {
             const iframe = YouTubeEmbed.createIframe(videoId, type);
             if (player.firstChild) {
@@ -246,7 +179,6 @@ async function initYouTubeVideos() {
             player.appendChild(iframe);
             YouTubeEmbed.handleFullscreen(iframe);
         } else {
-            // Desktop behavior remains the same
             const element = await YouTubeEmbed.createThumbnail(videoId, type);
             if (player.firstChild) {
                 player.removeChild(player.firstChild);
