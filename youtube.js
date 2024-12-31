@@ -236,12 +236,23 @@ async function initYouTubeVideos() {
     
     for (const player of players) {
         const { id: videoId, type = 'video' } = player.dataset;
-        const element = await YouTubeEmbed.createThumbnail(videoId, type);
         
-        if (player.firstChild) {
-            player.removeChild(player.firstChild);
+        // Create iframe directly for mobile devices
+        if (DeviceDetector.isMobile()) {
+            const iframe = YouTubeEmbed.createIframe(videoId, type);
+            if (player.firstChild) {
+                player.removeChild(player.firstChild);
+            }
+            player.appendChild(iframe);
+            YouTubeEmbed.handleFullscreen(iframe);
+        } else {
+            // Desktop behavior remains the same
+            const element = await YouTubeEmbed.createThumbnail(videoId, type);
+            if (player.firstChild) {
+                player.removeChild(player.firstChild);
+            }
+            player.appendChild(element);
         }
-        player.appendChild(element);
     }
 }
 
