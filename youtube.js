@@ -90,59 +90,71 @@ class YouTubePlayer {
             ? `https://www.youtube.com/embed/videoseries?list=${videoId}`
             : `https://www.youtube.com/embed/${videoId}`;
 
-        const params = 'rel=0&autoplay=1&playsinline=0&fs=1&enablejsapi=1' + (this.isMobile() ? '' : '&mute=1');
+        // Different params for mobile and desktop
+        const mobileParams = 'rel=0&autoplay=1&playsinline=0&fs=1&enablejsapi=1';
+        const desktopParams = 'rel=0&enablejsapi=1&mute=1';
+        const params = this.isMobile() ? mobileParams : desktopParams;
+        
         iframe.setAttribute('src', `${embedUrl}&${params}`);
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('allowfullscreen', '1');
         iframe.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; fullscreen');
         
-        if (this.isIOS()) {
-            iframe.setAttribute('webkit-playsinline', '0');
-            iframe.setAttribute('playsinline', '0');
-            iframe.setAttribute('allow-pip', 'false');
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
+        if (this.isMobile()) {
+            // Preload content for mobile
+            iframe.setAttribute('loading', 'eager');
+            iframe.setAttribute('importance', 'high');
             
-            // Enhanced fullscreen script with loading detection
-            const forceFullscreen = `
-                var video = document.querySelector('video');
-                if (video) {
-                    var checkReady = setInterval(function() {
-                        if (video.readyState >= 1) {
-                            clearInterval(checkReady);
+            if (this.isIOS()) {
+                iframe.setAttribute('webkit-playsinline', '0');
+                iframe.setAttribute('playsinline', '0');
+                iframe.setAttribute('allow-pip', 'false');
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                
+                // Enhanced fullscreen script with loading detection
+                const forceFullscreen = `
+                    var video = document.querySelector('video');
+                    if (video) {
+                        var checkReady = setInterval(function() {
+                            if (video.readyState >= 1) {
+                                clearInterval(checkReady);
+                                video.webkitEnterFullscreen();
+                                video.play();
+                            }
+                        }, 100);
+
+                        video.addEventListener('loadedmetadata', function() {
                             video.webkitEnterFullscreen();
                             video.play();
-                        }
-                    }, 100);
+                        });
 
-                    video.addEventListener('loadedmetadata', function() {
-                        video.webkitEnterFullscreen();
-                        video.play();
-                    });
-
-                    video.addEventListener('canplay', function() {
-                        video.webkitEnterFullscreen();
-                        video.play();
-                    });
-                }
-            `;
-            
-            iframe.onload = () => {
-                setTimeout(() => {
-                    try {
-                        iframe.contentWindow.postMessage(`{"event":"command","func":"${forceFullscreen}","args":""}`, '*');
-                    } catch (e) {
-                        console.warn('Could not inject fullscreen script:', e);
+                        video.addEventListener('canplay', function() {
+                            video.webkitEnterFullscreen();
+                            video.play();
+                        });
                     }
-                }, 500); // Give YouTube player time to initialize
-            };
-        }
-
-        if (!this.isMobile()) {
-            // Unmute after delay for desktop
-            setTimeout(() => {
+                `;
+                
+                iframe.onload = () => {
+                    setTimeout(() => {
+                        try {
+                            iframe.contentWindow.postMessage(`{"event":"command","func":"${forceFullscreen}","args":""}`, '*');
+                        } catch (e) {
+                            console.warn('Could not inject fullscreen script:', e);
+                        }
+                    }, 500); // Give YouTube player time to initialize
+                };
+            }
+        } else {
+            // Desktop: Load on click
+            iframe.setAttribute('loading', 'lazy');
+            iframe.src = `${embedUrl}&${desktopParams}`;
+            
+            // Manual trigger for desktop
+            iframe.addEventListener('click', () => {
                 iframe.src = `${embedUrl}&rel=0&autoplay=1`;
-            }, 1000);
+            });
         }
 
         return iframe;
@@ -207,6 +219,11 @@ class YouTubePlayer {
                                                iframe.msRequestFullscreen?.bind(iframe);
                     if (requestFullscreen) requestFullscreen();
                 }
+            } else {
+                // Desktop: Manually trigger play after click
+                setTimeout(() => {
+                    iframe.src = `${embedUrl}&rel=0&autoplay=1`;
+                }, 100);
             }
         };
 
