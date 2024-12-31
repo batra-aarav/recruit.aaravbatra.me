@@ -40,7 +40,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
     max-width: 100%;
     display: inline-block;
     text-decoration: none;
-    color: inherit;
+    color: #57F287;
     transition: color 0.3s ease 0s;
 }
 
@@ -87,7 +87,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
 }
 
 .link:hover {
-    color: rgb(36, 99, 235);
+    color: #6a9030;
     text-decoration: underline;
 }
 
@@ -524,7 +524,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: relative; /* Added position relative */
+    position: relative;
 }
 
 .youtube-container .fallback-text {
@@ -566,7 +566,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
     top: 0;
     left: 0;
     right: 0;
-    height: 120px; /* Increased height for smoother gradient */
+    height: 120px;
     background: linear-gradient(to bottom, 
         rgba(0, 0, 0, 0.7) 0%,
         rgba(0, 0, 0, 0.4) 40%,
@@ -578,7 +578,6 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
     pointer-events: none; /* Allow clicks to pass through */
 }
 
-/* Remove the previous ::before shadow */
 .youtube-player::before {
     display: none;
 }
@@ -712,4 +711,26 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
     #ikb9r7 {
         align-self: center;
     }
+}
+
+/* Override for footer links */
+footer .link,
+.site-footer .link {
+    color: inherit;
+}
+
+footer .link:hover,
+.site-footer .link:hover {
+    color: rgb(36, 99, 235);
+}
+
+main a:not(footer a):not(.navbar-menu-link):not(.button) {
+    color: #57F287;
+    text-decoration: none;
+    transition: color 0.3s ease 0s;
+}
+
+main a:not(footer a):not(.navbar-menu-link):not(.button):hover {
+    color: #6a9030;
+    text-decoration: underline;
 }
