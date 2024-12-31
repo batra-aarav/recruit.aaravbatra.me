@@ -90,10 +90,9 @@ class YouTubePlayer {
             ? `https://www.youtube.com/embed/videoseries?list=${videoId}`
             : `https://www.youtube.com/embed/${videoId}`;
 
-        // Different params for mobile and desktop
-        const mobileParams = 'rel=0&autoplay=1&playsinline=0&fs=1&enablejsapi=1';
-        const desktopParams = 'rel=0&enablejsapi=1&mute=1';
-        const params = this.isMobile() ? mobileParams : desktopParams;
+        const params = this.isMobile()
+            ? 'rel=0&autoplay=1&playsinline=0&fs=1&enablejsapi=1'
+            : 'rel=0&enablejsapi=1';
         
         iframe.setAttribute('src', `${embedUrl}&${params}`);
         iframe.setAttribute('frameborder', '0');
@@ -182,50 +181,46 @@ class YouTubePlayer {
             <div class="play"></div>
         `;
 
-        div.onclick = () => {
+        if (this.isMobile()) {
+            // Auto-advance past thumbnail for mobile
             const iframe = this.createIframe(videoId, type);
-            div.parentNode.replaceChild(iframe, div);
+            setTimeout(() => {
+                if (div.parentNode) {
+                    div.parentNode.replaceChild(iframe, div);
+                    if (this.isIOS()) {
+                        const waitForVideo = (attempts = 0) => {
+                            try {
+                                const video = iframe.contentDocument?.querySelector('video');
+                                if (video) {
+                                    const triggerFullscreen = () => {
+                                        video.webkitEnterFullscreen();
+                                        video.play();
+                                    };
 
-            if (this.isMobile()) {
-                if (this.isIOS()) {
-                    const waitForVideo = (attempts = 0) => {
-                        try {
-                            const video = iframe.contentDocument?.querySelector('video');
-                            if (video) {
-                                const triggerFullscreen = () => {
-                                    video.webkitEnterFullscreen();
-                                    video.play();
-                                };
-
-                                if (video.readyState >= 1) {
-                                    triggerFullscreen();
-                                } else {
-                                    video.addEventListener('loadedmetadata', triggerFullscreen);
-                                    video.addEventListener('canplay', triggerFullscreen);
+                                    if (video.readyState >= 1) {
+                                        triggerFullscreen();
+                                    } else {
+                                        video.addEventListener('loadedmetadata', triggerFullscreen);
+                                        video.addEventListener('canplay', triggerFullscreen);
+                                    }
+                                } else if (attempts < 10) {
+                                    setTimeout(() => waitForVideo(attempts + 1), 300);
                                 }
-                            } else if (attempts < 10) {
-                                setTimeout(() => waitForVideo(attempts + 1), 300);
+                            } catch (e) {
+                                console.warn('Fullscreen attempt failed:', e);
                             }
-                        } catch (e) {
-                            console.warn('Fullscreen attempt failed:', e);
-                        }
-                    };
-
-                    setTimeout(waitForVideo, 500);
-                } else {
-                    const requestFullscreen = iframe.requestFullscreen?.bind(iframe) ||
-                                               iframe.webkitRequestFullscreen?.bind(iframe) ||
-                                               iframe.mozRequestFullScreen?.bind(iframe) ||
-                                               iframe.msRequestFullscreen?.bind(iframe);
-                    if (requestFullscreen) requestFullscreen();
+                        };
+                        setTimeout(waitForVideo, 500);
+                    }
                 }
-            } else {
-                // Desktop: Manually trigger play after click
-                setTimeout(() => {
-                    iframe.src = `${embedUrl}&rel=0&autoplay=1`;
-                }, 100);
-            }
-        };
+            }, 100);
+        } else {
+            // Keep click behavior for desktop
+            div.onclick = () => {
+                const iframe = this.createIframe(videoId, type);
+                div.parentNode.replaceChild(iframe, div);
+            };
+        }
 
         return div;
     }
