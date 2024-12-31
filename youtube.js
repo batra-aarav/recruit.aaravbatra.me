@@ -5,7 +5,7 @@
 
 const CONFIG = {
     API_KEYS: {
-        RESTRICTED: 'AIzaSyAP5S1cb4P3HYlc0gGcxZGcv2-mlQwXc-8',
+        RESTRICTED: 'key',
         ENV_FILE: './TOKEN.env'
     },
     API_ENDPOINTS: {
