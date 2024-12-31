@@ -120,6 +120,22 @@ class YouTubePlayer {
         div.onclick = () => {
             const iframe = this.createIframe(videoId, type);
             div.parentNode.replaceChild(iframe, div);
+            
+            // Check if mobile device
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                // Request fullscreen after a short delay to allow iframe to load
+                setTimeout(() => {
+                    if (iframe.requestFullscreen) {
+                        iframe.requestFullscreen();
+                    } else if (iframe.webkitRequestFullscreen) {
+                        iframe.webkitRequestFullscreen();
+                    } else if (iframe.mozRequestFullScreen) {
+                        iframe.mozRequestFullScreen();
+                    } else if (iframe.msRequestFullscreen) {
+                        iframe.msRequestFullscreen();
+                    }
+                }, 1000);
+            }
         };
 
         return div;
