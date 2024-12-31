@@ -94,11 +94,17 @@ class YouTubePlayer {
         iframe.setAttribute('src', `${embedUrl}&${params}`);
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('allowfullscreen', '1');
-        iframe.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; fullscreen');
         
         if (this.isIOS()) {
             iframe.setAttribute('webkit-playsinline', '0');
             iframe.setAttribute('playsinline', '0');
+            iframe.setAttribute('allow-pip', 'false');
+            iframe.style.position = 'absolute';
+            iframe.style.top = '0';
+            iframe.style.left = '0';
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
         }
 
         if (!this.isMobile()) {
@@ -140,34 +146,49 @@ class YouTubePlayer {
             if (this.isMobile()) {
                 // Handle fullscreen for mobile devices
                 setTimeout(() => {
-                    const requestFullscreen = iframe.requestFullscreen?.bind(iframe) ||
-                                           iframe.webkitRequestFullscreen?.bind(iframe) ||
-                                           iframe.mozRequestFullScreen?.bind(iframe) ||
-                                           iframe.msRequestFullscreen?.bind(iframe);
-
-                    if (requestFullscreen) {
-                        requestFullscreen();
-                    } else if (this.isIOS()) {
-                        // Fallback for iOS
+                    if (this.isIOS()) {
+                        // Force native fullscreen on iOS
                         const wrapper = document.createElement('div');
                         wrapper.style.position = 'fixed';
                         wrapper.style.top = '0';
                         wrapper.style.left = '0';
-                        wrapper.style.width = '100%';
-                        wrapper.style.height = '100%';
+                        wrapper.style.width = '100vw';
+                        wrapper.style.height = '100vh';
                         wrapper.style.zIndex = '999999';
+                        wrapper.style.backgroundColor = '#000';
                         wrapper.appendChild(iframe);
                         document.body.appendChild(wrapper);
                         
-                        // Add close button for iOS
+                        // Add close button
                         const closeBtn = document.createElement('button');
                         closeBtn.innerHTML = '✕';
                         closeBtn.style.position = 'fixed';
                         closeBtn.style.top = '10px';
                         closeBtn.style.right = '10px';
                         closeBtn.style.zIndex = '9999999';
-                        closeBtn.onclick = () => wrapper.remove();
+                        closeBtn.style.background = 'rgba(0,0,0,0.5)';
+                        closeBtn.style.color = 'white';
+                        closeBtn.style.border = 'none';
+                        closeBtn.style.padding = '10px 15px';
+                        closeBtn.style.cursor = 'pointer';
+                        closeBtn.style.borderRadius = '50%';
+                        closeBtn.onclick = () => {
+                            wrapper.remove();
+                            div.parentNode.replaceChild(div, iframe);
+                        };
                         wrapper.appendChild(closeBtn);
+                        
+                        // Lock body scroll
+                        document.body.style.overflow = 'hidden';
+                        closeBtn.addEventListener('click', () => {
+                            document.body.style.overflow = '';
+                        });
+                    } else {
+                        const requestFullscreen = iframe.requestFullscreen?.bind(iframe) ||
+                                               iframe.webkitRequestFullscreen?.bind(iframe) ||
+                                               iframe.mozRequestFullScreen?.bind(iframe) ||
+                                               iframe.msRequestFullscreen?.bind(iframe);
+                        if (requestFullscreen) requestFullscreen();
                     }
                 }, 100);
             }
