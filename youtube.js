@@ -91,6 +91,11 @@ async function initYouTubeVideos() {
         }
         div.appendChild(thumbNode);
         
+        // Add shadow overlay
+        var shadowOverlay = document.createElement('div');
+        shadowOverlay.className = 'thumbnail-shadow';
+        div.appendChild(shadowOverlay);
+        
         // Add title overlay
         var titleDiv = document.createElement('div');
         titleDiv.className = 'video-title-overlay';

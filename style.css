@@ -558,34 +558,29 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
     height: 100%;
     border-radius: 16px;
     object-fit: cover;
-    mask-image: linear-gradient(to top, 
-        rgba(0, 0, 0, 1) 0%,
-        rgba(0, 0, 0, 1) 70%,
-        rgba(0, 0, 0, 0.8) 85%,
-        rgba(0, 0, 0, 0.6) 100%
-    );
-    -webkit-mask-image: linear-gradient(to top, 
-        rgba(0, 0, 0, 1) 0%,
-        rgba(0, 0, 0, 1) 70%,
-        rgba(0, 0, 0, 0.8) 85%,
-        rgba(0, 0, 0, 0.6) 100%
-    );
 }
 
-.youtube-player::before {
+.youtube-player .thumbnail-shadow {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 100px;
+    height: 120px; /* Increased height for smoother gradient */
     background: linear-gradient(to bottom, 
-        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.4) 40%,
         rgba(0, 0, 0, 0) 100%
     );
     z-index: 1;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
+    pointer-events: none; /* Allow clicks to pass through */
+}
+
+/* Remove the previous ::before shadow */
+.youtube-player::before {
+    display: none;
 }
 
 .youtube-player .video-title-overlay {
