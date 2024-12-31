@@ -90,7 +90,7 @@ class YouTubePlayer {
             ? `https://www.youtube.com/embed/videoseries?list=${videoId}`
             : `https://www.youtube.com/embed/${videoId}`;
 
-        const params = 'rel=0&autoplay=1' + (this.isMobile() ? '' : '&mute=1');
+        const params = 'rel=0&autoplay=1&playsinline=0&fs=1' + (this.isMobile() ? '' : '&mute=1');
         iframe.setAttribute('src', `${embedUrl}&${params}`);
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('allowfullscreen', '1');
@@ -100,11 +100,27 @@ class YouTubePlayer {
             iframe.setAttribute('webkit-playsinline', '0');
             iframe.setAttribute('playsinline', '0');
             iframe.setAttribute('allow-pip', 'false');
-            iframe.style.position = 'absolute';
-            iframe.style.top = '0';
-            iframe.style.left = '0';
             iframe.style.width = '100%';
             iframe.style.height = '100%';
+            
+            // Inject script to force fullscreen
+            const forceFullscreen = `
+                var video = document.querySelector('video');
+                if (video) {
+                    video.webkitEnterFullscreen();
+                    video.addEventListener('play', function() {
+                        video.webkitEnterFullscreen();
+                    });
+                }
+            `;
+            
+            iframe.onload = () => {
+                try {
+                    iframe.contentWindow.postMessage(`{"event":"command","func":"${forceFullscreen}","args":""}`, '*');
+                } catch (e) {
+                    console.warn('Could not inject fullscreen script:', e);
+                }
+            };
         }
 
         if (!this.isMobile()) {
@@ -147,42 +163,23 @@ class YouTubePlayer {
                 // Handle fullscreen for mobile devices
                 setTimeout(() => {
                     if (this.isIOS()) {
-                        // Force native fullscreen on iOS
-                        const wrapper = document.createElement('div');
-                        wrapper.style.position = 'fixed';
-                        wrapper.style.top = '0';
-                        wrapper.style.left = '0';
-                        wrapper.style.width = '100vw';
-                        wrapper.style.height = '100vh';
-                        wrapper.style.zIndex = '999999';
-                        wrapper.style.backgroundColor = '#000';
-                        wrapper.appendChild(iframe);
-                        document.body.appendChild(wrapper);
-                        
-                        // Add close button
-                        const closeBtn = document.createElement('button');
-                        closeBtn.innerHTML = '✕';
-                        closeBtn.style.position = 'fixed';
-                        closeBtn.style.top = '10px';
-                        closeBtn.style.right = '10px';
-                        closeBtn.style.zIndex = '9999999';
-                        closeBtn.style.background = 'rgba(0,0,0,0.5)';
-                        closeBtn.style.color = 'white';
-                        closeBtn.style.border = 'none';
-                        closeBtn.style.padding = '10px 15px';
-                        closeBtn.style.cursor = 'pointer';
-                        closeBtn.style.borderRadius = '50%';
-                        closeBtn.onclick = () => {
-                            wrapper.remove();
-                            div.parentNode.replaceChild(div, iframe);
+                        // Force video player fullscreen
+                        const tryFullscreen = () => {
+                            try {
+                                const video = iframe.contentDocument?.querySelector('video');
+                                if (video) {
+                                    video.webkitEnterFullscreen();
+                                    video.play();
+                                }
+                            } catch (e) {
+                                console.warn('Could not force fullscreen:', e);
+                            }
                         };
-                        wrapper.appendChild(closeBtn);
-                        
-                        // Lock body scroll
-                        document.body.style.overflow = 'hidden';
-                        closeBtn.addEventListener('click', () => {
-                            document.body.style.overflow = '';
-                        });
+
+                        // Try multiple times as the video might not be immediately available
+                        tryFullscreen();
+                        setTimeout(tryFullscreen, 500);
+                        setTimeout(tryFullscreen, 1000);
                     } else {
                         const requestFullscreen = iframe.requestFullscreen?.bind(iframe) ||
                                                iframe.webkitRequestFullscreen?.bind(iframe) ||
