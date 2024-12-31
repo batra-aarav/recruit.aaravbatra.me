@@ -10,10 +10,17 @@ function labnolIframe(div) {
         ? 'https://www.youtube.com/embed/videoseries?list=' + videoId
         : 'https://www.youtube.com/embed/' + videoId;
     
-    iframe.setAttribute('src', embedUrl + '&autoplay=1&rel=0');
+    // Add mute=1 to enable autoplay on mobile
+    iframe.setAttribute('src', embedUrl + '&autoplay=1&rel=0&mute=1');
     iframe.setAttribute('frameborder', '0');
     iframe.setAttribute('allowfullscreen', '1');
     iframe.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
+    
+    // Unmute after a short delay to ensure autoplay works
+    setTimeout(() => {
+        iframe.src = embedUrl + '&autoplay=1&rel=0';
+    }, 1000);
+    
     div.parentNode.replaceChild(iframe, div);
 }
 
