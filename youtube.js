@@ -76,42 +76,39 @@ class YouTubeService {
 }
 
 class YouTubePlayer {
+    static isMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    static isIOS() {
+        return /iPhone|iPad|iPod/.test(navigator.userAgent);
+    }
+
     static createIframe(videoId, type) {
         const iframe = document.createElement('iframe');
         const embedUrl = type === 'playlist' 
             ? `https://www.youtube.com/embed/videoseries?list=${videoId}`
             : `https://www.youtube.com/embed/${videoId}`;
 
-        iframe.setAttribute('src', `${embedUrl}&autoplay=1&rel=0&mute=1&playsinline=0`);
+        const params = 'rel=0&autoplay=1' + (this.isMobile() ? '' : '&mute=1');
+        iframe.setAttribute('src', `${embedUrl}&${params}`);
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('allowfullscreen', '1');
         iframe.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen');
+        
+        if (this.isIOS()) {
+            iframe.setAttribute('webkit-playsinline', '0');
+            iframe.setAttribute('playsinline', '0');
+        }
 
-        // Create a wrapper div for fullscreen support
-        const wrapper = document.createElement('div');
-        wrapper.style.position = 'relative';
-        wrapper.style.width = '100%';
-        wrapper.style.height = '100%';
-        wrapper.appendChild(iframe);
+        if (!this.isMobile()) {
+            // Unmute after delay for desktop
+            setTimeout(() => {
+                iframe.src = `${embedUrl}&rel=0&autoplay=1`;
+            }, 1000);
+        }
 
-        // Request fullscreen after a short delay to ensure everything is loaded
-        setTimeout(() => {
-            // Try to enter fullscreen mode
-            if (wrapper.requestFullscreen) {
-                wrapper.requestFullscreen();
-            } else if (wrapper.webkitRequestFullscreen) {
-                wrapper.webkitRequestFullscreen();
-            } else if (wrapper.mozRequestFullScreen) {
-                wrapper.mozRequestFullScreen();
-            } else if (wrapper.msRequestFullscreen) {
-                wrapper.msRequestFullscreen();
-            }
-            
-            // Unmute video after entering fullscreen
-            iframe.src = `${embedUrl}&autoplay=1&rel=0&playsinline=0`;
-        }, 1000);
-
-        return wrapper;
+        return iframe;
     }
 
     static async createThumbnail(videoId, type) {
@@ -139,6 +136,41 @@ class YouTubePlayer {
         div.onclick = () => {
             const iframe = this.createIframe(videoId, type);
             div.parentNode.replaceChild(iframe, div);
+
+            if (this.isMobile()) {
+                // Handle fullscreen for mobile devices
+                setTimeout(() => {
+                    const requestFullscreen = iframe.requestFullscreen?.bind(iframe) ||
+                                           iframe.webkitRequestFullscreen?.bind(iframe) ||
+                                           iframe.mozRequestFullScreen?.bind(iframe) ||
+                                           iframe.msRequestFullscreen?.bind(iframe);
+
+                    if (requestFullscreen) {
+                        requestFullscreen();
+                    } else if (this.isIOS()) {
+                        // Fallback for iOS
+                        const wrapper = document.createElement('div');
+                        wrapper.style.position = 'fixed';
+                        wrapper.style.top = '0';
+                        wrapper.style.left = '0';
+                        wrapper.style.width = '100%';
+                        wrapper.style.height = '100%';
+                        wrapper.style.zIndex = '999999';
+                        wrapper.appendChild(iframe);
+                        document.body.appendChild(wrapper);
+                        
+                        // Add close button for iOS
+                        const closeBtn = document.createElement('button');
+                        closeBtn.innerHTML = '✕';
+                        closeBtn.style.position = 'fixed';
+                        closeBtn.style.top = '10px';
+                        closeBtn.style.right = '10px';
+                        closeBtn.style.zIndex = '9999999';
+                        closeBtn.onclick = () => wrapper.remove();
+                        wrapper.appendChild(closeBtn);
+                    }
+                }, 100);
+            }
         };
 
         return div;
@@ -152,12 +184,22 @@ async function initYouTubeVideos() {
         const videoId = player.dataset.id;
         const type = player.dataset.type || 'video';
         
-        const thumbnail = await YouTubePlayer.createThumbnail(videoId, type);
+        const element = await YouTubePlayer.createThumbnail(videoId, type);
         
         if (player.children.length) {
             player.removeChild(player.firstChild);
         }
-        player.appendChild(thumbnail);
+        player.appendChild(element);
+
+        // Add fullscreen handling for mobile
+        if (YouTubePlayer.isMobile() && element.tagName === 'IFRAME') {
+            element.addEventListener('click', () => {
+                element.requestFullscreen?.() || 
+                element.webkitRequestFullscreen?.() || 
+                element.mozRequestFullScreen?.() || 
+                element.msRequestFullscreen?.();
+            });
+        }
     }
 }
 
