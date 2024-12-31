@@ -25,17 +25,23 @@ function labnolIframe(div) {
 }
 
 async function getApiKey() {
+    // First try the hardcoded API key that's IP restricted
+    const restrictedApiKey = 'AIzaSyAP5S1cb4P3HYlc0gGcxZGcv2-mlQwXc-8';
+    
+    // Test if the restricted key works
     try {
-        // Try to get from config.json (generated during build)
-        try {
-            const response = await fetch('./config.json');
-            const data = await response.json();
-            if (data.youtubeApiKey) return data.youtubeApiKey;
-        } catch (e) {
-            console.log('Could not fetch from config, trying local file...');
+        const testResponse = await fetch(
+            `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=1&playlistId=ANY_ID&key=${restrictedApiKey}`
+        );
+        if (testResponse.ok) {
+            return restrictedApiKey;
         }
+    } catch (e) {
+        console.log('Restricted API key failed, trying fallback...');
+    }
 
-        // Fallback to local file for development
+    // If restricted key doesn't work, try reading from TOKEN.env
+    try {
         const response = await fetch('./TOKEN.env');
         const text = await response.text();
         const key = text.match(/YOUTUBE_API_KEY=(.+)/)[1];
