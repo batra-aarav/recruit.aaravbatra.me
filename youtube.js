@@ -1,6 +1,8 @@
-/** @typedef {Object} VideoInfo
- * @property {string} thumbnailUrl
- * @property {string} title
+/**
+ * @typedef {Object} VideoInfo
+ * @property {string} thumbnailUrl - URL of the video thumbnail
+ * @property {string} title - Title of the video
+ * @property {string} [videoId] - YouTube video ID
  */
 
 const CONFIG = {
@@ -18,55 +20,67 @@ const CONFIG = {
     }
 };
 
-class YouTubeService {
+class DeviceDetector {
+    static isMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    static isIOS() {
+        return /iPhone|iPad|iPod/.test(navigator.userAgent);
+    }
+}
+
+class YouTubeAPI {
     static async getApiKey() {
         try {
-            // Try restricted key first
             const testResponse = await fetch(
                 `${CONFIG.API_ENDPOINTS.VIDEOS}?part=snippet&id=jF-yxeyEhsM&key=${CONFIG.API_KEYS.RESTRICTED}`
             );
             const data = await testResponse.json();
             if (!data.error) return CONFIG.API_KEYS.RESTRICTED;
             
-            // Fallback to env file
             const response = await fetch(CONFIG.API_KEYS.ENV_FILE);
             const text = await response.text();
-            return text.match(/YOUTUBE_API_KEY=(.+)/)[1].trim();
+            const match = text.match(/YOUTUBE_API_KEY=(.+)/);
+            return match ? match[1].trim() : null;
         } catch (error) {
-            console.error('API key fetch failed:', error);
+            console.error('[YouTubeAPI] Key fetch failed:', error);
             return null;
         }
     }
 
-    static async getFirstVideoFromPlaylist(playlistId) {
+    static async fetchVideoInfo(videoId, apiKey) {
+        const response = await fetch(
+            `${CONFIG.API_ENDPOINTS.VIDEOS}?part=snippet&id=${videoId}&key=${apiKey}`
+        );
+        const data = await response.json();
+        if (!data.items?.[0]) throw new Error('Video not found');
+        return data.items[0].snippet;
+    }
+
+    static async getFirstPlaylistVideo(playlistId) {
         try {
             const apiKey = await this.getApiKey();
             if (!apiKey) throw new Error('No API key available');
 
-            // Get first video from playlist
             const playlistResponse = await fetch(
                 `${CONFIG.API_ENDPOINTS.PLAYLIST_ITEMS}?part=snippet&maxResults=1&playlistId=${playlistId}&key=${apiKey}`
             );
             const playlistData = await playlistResponse.json();
-            
-            if (!playlistData.items?.[0]) throw new Error('No videos in playlist');
+            if (!playlistData.items?.[0]) throw new Error('Empty playlist');
 
             const videoId = playlistData.items[0].snippet.resourceId.videoId;
-
-            // Get high quality thumbnail
-            const videoResponse = await fetch(
-                `${CONFIG.API_ENDPOINTS.VIDEOS}?part=snippet&id=${videoId}&key=${apiKey}`
-            );
-            const { items: [{ snippet }] } = await videoResponse.json();
+            const snippet = await this.fetchVideoInfo(videoId, apiKey);
 
             return {
                 thumbnailUrl: snippet.thumbnails.maxres?.url || 
                              snippet.thumbnails.standard?.url ||
                              snippet.thumbnails.high.url,
-                title: snippet.title
+                title: snippet.title,
+                videoId
             };
         } catch (error) {
-            console.error('Playlist fetch failed:', error);
+            console.error('[YouTubeAPI] Playlist fetch failed:', error);
             return {
                 thumbnailUrl: CONFIG.DEFAULTS.FALLBACK_THUMBNAIL,
                 title: CONFIG.DEFAULTS.FALLBACK_TITLE
@@ -75,103 +89,95 @@ class YouTubeService {
     }
 }
 
-class YouTubePlayer {
-    static isMobile() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    }
-
-    static isIOS() {
-        return /iPhone|iPad|iPod/.test(navigator.userAgent);
-    }
-
+class YouTubeEmbed {
     static createIframe(videoId, type) {
         const iframe = document.createElement('iframe');
         const embedUrl = type === 'playlist' 
             ? `https://www.youtube.com/embed/videoseries?list=${videoId}`
             : `https://www.youtube.com/embed/${videoId}`;
 
-        const params = this.isMobile()
-            ? 'rel=0&autoplay=1&playsinline=0&fs=1&enablejsapi=1'
-            : 'rel=0&enablejsapi=1';
-        
-        iframe.setAttribute('src', `${embedUrl}&${params}`);
-        iframe.setAttribute('frameborder', '0');
-        iframe.setAttribute('allowfullscreen', '1');
-        iframe.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; fullscreen');
-        
-        if (this.isMobile()) {
-            // Preload content for mobile
-            iframe.setAttribute('loading', 'eager');
-            iframe.setAttribute('importance', 'high');
-            
-            if (this.isIOS()) {
-                iframe.setAttribute('webkit-playsinline', '0');
-                iframe.setAttribute('playsinline', '0');
-                iframe.setAttribute('allow-pip', 'false');
-                iframe.style.width = '100%';
-                iframe.style.height = '100%';
-                
-                // Enhanced fullscreen script with loading detection
-                const forceFullscreen = `
-                    var video = document.querySelector('video');
-                    if (video) {
-                        var checkReady = setInterval(function() {
-                            if (video.readyState >= 1) {
-                                clearInterval(checkReady);
-                                video.webkitEnterFullscreen();
-                                video.play();
-                            }
-                        }, 100);
+        const params = new URLSearchParams({
+            rel: '0',
+            autoplay: '1',
+            playsinline: '0',
+            fs: '1',
+            enablejsapi: '1',
+            mute: DeviceDetector.isMobile() ? '0' : '1'
+        });
 
-                        video.addEventListener('loadedmetadata', function() {
-                            video.webkitEnterFullscreen();
-                            video.play();
-                        });
+        iframe.src = `${embedUrl}&${params}`;
+        iframe.frameBorder = '0';
+        iframe.allowFullscreen = true;
+        iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; fullscreen';
 
-                        video.addEventListener('canplay', function() {
-                            video.webkitEnterFullscreen();
-                            video.play();
-                        });
-                    }
-                `;
-                
-                iframe.onload = () => {
-                    setTimeout(() => {
-                        try {
-                            iframe.contentWindow.postMessage(`{"event":"command","func":"${forceFullscreen}","args":""}`, '*');
-                        } catch (e) {
-                            console.warn('Could not inject fullscreen script:', e);
-                        }
-                    }, 500); // Give YouTube player time to initialize
-                };
-            }
-        } else {
-            // Desktop: Load on click
-            iframe.setAttribute('loading', 'lazy');
-            iframe.src = `${embedUrl}&${desktopParams}`;
-            
-            // Manual trigger for desktop
-            iframe.addEventListener('click', () => {
-                iframe.src = `${embedUrl}&rel=0&autoplay=1`;
-            });
+        if (DeviceDetector.isIOS()) {
+            this.setupIOSFullscreen(iframe);
+        } else if (!DeviceDetector.isMobile()) {
+            this.setupDesktopAutoplay(iframe, embedUrl);
         }
 
         return iframe;
     }
 
+    static setupIOSFullscreen(iframe) {
+        Object.assign(iframe, {
+            webkitPlaysinline: '0',
+            playsinline: '0',
+            style: 'width: 100%; height: 100%;'
+        });
+
+        const fullscreenScript = `
+            const video = document.querySelector('video');
+            if (video) {
+                const enterFullscreen = () => {
+                    video.webkitEnterFullscreen();
+                    video.play();
+                };
+                
+                if (video.readyState >= 1) enterFullscreen();
+                video.addEventListener('loadedmetadata', enterFullscreen);
+                video.addEventListener('canplay', enterFullscreen);
+            }
+        `;
+
+        iframe.onload = () => {
+            setTimeout(() => {
+                try {
+                    iframe.contentWindow.postMessage(
+                        JSON.stringify({ event: 'command', func: fullscreenScript }), 
+                        '*'
+                    );
+                } catch (e) {
+                    console.warn('[YouTubeEmbed] Fullscreen injection failed:', e);
+                }
+            }, 500);
+        };
+    }
+
+    static setupDesktopAutoplay(iframe, embedUrl) {
+        setTimeout(() => {
+            iframe.src = `${embedUrl}&rel=0&autoplay=1`;
+        }, 1000);
+    }
+
     static async createThumbnail(videoId, type) {
-        const div = document.createElement('div');
-        div.dataset.id = videoId;
-        div.dataset.type = type;
+        const container = document.createElement('div');
+        Object.assign(container.dataset, { id: videoId, type });
 
         const videoInfo = type === 'playlist'
-            ? await YouTubeService.getFirstVideoFromPlaylist(videoId)
+            ? await YouTubeAPI.getFirstPlaylistVideo(videoId)
             : { 
                 thumbnailUrl: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
                 title: 'Video'
               };
 
-        div.innerHTML = `
+        container.innerHTML = this.getThumbnailHTML(videoInfo);
+        container.onclick = () => this.handleThumbnailClick(container, videoId, type);
+        return container;
+    }
+
+    static getThumbnailHTML(videoInfo) {
+        return `
             <img src="${videoInfo.thumbnailUrl}">
             <div class="thumbnail-shadow"></div>
             <div class="video-title-overlay">
@@ -180,49 +186,48 @@ class YouTubePlayer {
             </div>
             <div class="play"></div>
         `;
+    }
 
-        if (this.isMobile()) {
-            // Auto-advance past thumbnail for mobile
-            const iframe = this.createIframe(videoId, type);
-            setTimeout(() => {
-                if (div.parentNode) {
-                    div.parentNode.replaceChild(iframe, div);
-                    if (this.isIOS()) {
-                        const waitForVideo = (attempts = 0) => {
-                            try {
-                                const video = iframe.contentDocument?.querySelector('video');
-                                if (video) {
-                                    const triggerFullscreen = () => {
-                                        video.webkitEnterFullscreen();
-                                        video.play();
-                                    };
+    static handleThumbnailClick(container, videoId, type) {
+        const iframe = this.createIframe(videoId, type);
+        container.parentNode.replaceChild(iframe, container);
+        this.handleFullscreen(iframe);
+    }
 
-                                    if (video.readyState >= 1) {
-                                        triggerFullscreen();
-                                    } else {
-                                        video.addEventListener('loadedmetadata', triggerFullscreen);
-                                        video.addEventListener('canplay', triggerFullscreen);
-                                    }
-                                } else if (attempts < 10) {
-                                    setTimeout(() => waitForVideo(attempts + 1), 300);
-                                }
-                            } catch (e) {
-                                console.warn('Fullscreen attempt failed:', e);
-                            }
-                        };
-                        setTimeout(waitForVideo, 500);
-                    }
-                }
-            }, 100);
+    static handleFullscreen(element) {
+        if (!DeviceDetector.isMobile()) return;
+
+        if (DeviceDetector.isIOS()) {
+            this.attemptIOSFullscreen(element);
         } else {
-            // Keep click behavior for desktop
-            div.onclick = () => {
-                const iframe = this.createIframe(videoId, type);
-                div.parentNode.replaceChild(iframe, div);
-            };
+            element.requestFullscreen?.() || 
+            element.webkitRequestFullscreen?.() || 
+            element.mozRequestFullScreen?.() || 
+            element.msRequestFullscreen?.();
         }
+    }
 
-        return div;
+    static attemptIOSFullscreen(iframe, attempts = 0) {
+        try {
+            const video = iframe.contentDocument?.querySelector('video');
+            if (video) {
+                const enterFullscreen = () => {
+                    video.webkitEnterFullscreen();
+                    video.play();
+                };
+
+                if (video.readyState >= 1) {
+                    enterFullscreen();
+                } else {
+                    video.addEventListener('loadedmetadata', enterFullscreen);
+                    video.addEventListener('canplay', enterFullscreen);
+                }
+            } else if (attempts < 10) {
+                setTimeout(() => this.attemptIOSFullscreen(iframe, attempts + 1), 300);
+            }
+        } catch (e) {
+            console.warn('[YouTubeEmbed] iOS fullscreen failed:', e);
+        }
     }
 }
 
@@ -230,25 +235,13 @@ async function initYouTubeVideos() {
     const players = document.getElementsByClassName('youtube-player');
     
     for (const player of players) {
-        const videoId = player.dataset.id;
-        const type = player.dataset.type || 'video';
+        const { id: videoId, type = 'video' } = player.dataset;
+        const element = await YouTubeEmbed.createThumbnail(videoId, type);
         
-        const element = await YouTubePlayer.createThumbnail(videoId, type);
-        
-        if (player.children.length) {
+        if (player.firstChild) {
             player.removeChild(player.firstChild);
         }
         player.appendChild(element);
-
-        // Add fullscreen handling for mobile
-        if (YouTubePlayer.isMobile() && element.tagName === 'IFRAME') {
-            element.addEventListener('click', () => {
-                element.requestFullscreen?.() || 
-                element.webkitRequestFullscreen?.() || 
-                element.mozRequestFullScreen?.() || 
-                element.msRequestFullscreen?.();
-            });
-        }
     }
 }
 
