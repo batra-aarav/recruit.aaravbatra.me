@@ -26,6 +26,16 @@ function labnolIframe(div) {
 
 async function getApiKey() {
     try {
+        // Try to get from config.json (generated during build)
+        try {
+            const response = await fetch('./config.json');
+            const data = await response.json();
+            if (data.youtubeApiKey) return data.youtubeApiKey;
+        } catch (e) {
+            console.log('Could not fetch from config, trying local file...');
+        }
+
+        // Fallback to local file for development
         const response = await fetch('./TOKEN.env');
         const text = await response.text();
         const key = text.match(/YOUTUBE_API_KEY=(.+)/)[1];
