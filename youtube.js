@@ -14,7 +14,7 @@ const CONFIG = {
     },
     DEFAULTS: {
         FALLBACK_THUMBNAIL: 'https://img.youtube.com/vi/jF-yxeyEhsM/maxresdefault.jpg',
-        FALLBACK_TITLE: 'Video Unavailable'
+        FALLBACK_TITLE: 'Aarav Batra | Long Snapping Highlight Tape | Class of 2025 | East Brunswick High School'
     }
 };
 
