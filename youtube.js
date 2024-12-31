@@ -82,17 +82,36 @@ class YouTubePlayer {
             ? `https://www.youtube.com/embed/videoseries?list=${videoId}`
             : `https://www.youtube.com/embed/${videoId}`;
 
-        iframe.setAttribute('src', `${embedUrl}&autoplay=1&rel=0&mute=1`);
+        iframe.setAttribute('src', `${embedUrl}&autoplay=1&rel=0&mute=1&playsinline=0`);
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('allowfullscreen', '1');
-        iframe.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen');
 
-        // Unmute after delay for autoplay
+        // Create a wrapper div for fullscreen support
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'relative';
+        wrapper.style.width = '100%';
+        wrapper.style.height = '100%';
+        wrapper.appendChild(iframe);
+
+        // Request fullscreen after a short delay to ensure everything is loaded
         setTimeout(() => {
-            iframe.src = `${embedUrl}&autoplay=1&rel=0`;
+            // Try to enter fullscreen mode
+            if (wrapper.requestFullscreen) {
+                wrapper.requestFullscreen();
+            } else if (wrapper.webkitRequestFullscreen) {
+                wrapper.webkitRequestFullscreen();
+            } else if (wrapper.mozRequestFullScreen) {
+                wrapper.mozRequestFullScreen();
+            } else if (wrapper.msRequestFullscreen) {
+                wrapper.msRequestFullscreen();
+            }
+            
+            // Unmute video after entering fullscreen
+            iframe.src = `${embedUrl}&autoplay=1&rel=0&playsinline=0`;
         }, 1000);
 
-        return iframe;
+        return wrapper;
     }
 
     static async createThumbnail(videoId, type) {
@@ -120,22 +139,6 @@ class YouTubePlayer {
         div.onclick = () => {
             const iframe = this.createIframe(videoId, type);
             div.parentNode.replaceChild(iframe, div);
-            
-            // Check if mobile device
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                // Request fullscreen after a short delay to allow iframe to load
-                setTimeout(() => {
-                    if (iframe.requestFullscreen) {
-                        iframe.requestFullscreen();
-                    } else if (iframe.webkitRequestFullscreen) {
-                        iframe.webkitRequestFullscreen();
-                    } else if (iframe.mozRequestFullScreen) {
-                        iframe.mozRequestFullScreen();
-                    } else if (iframe.msRequestFullscreen) {
-                        iframe.msRequestFullscreen();
-                    }
-                }, 1000);
-            }
         };
 
         return div;
