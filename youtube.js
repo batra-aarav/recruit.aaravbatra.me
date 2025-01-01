@@ -41,6 +41,7 @@ class YouTubeEmbed {
         iframe.frameBorder = '0';
         iframe.allowFullscreen = true;
         iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; fullscreen';
+        iframe.title = "Aarav Batra's Youtube Video Playlist";
 
         if (DeviceDetector.isIOS()) {
             this.setupIOSFullscreen(iframe);
