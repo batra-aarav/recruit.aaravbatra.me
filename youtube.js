@@ -112,10 +112,10 @@ class YouTubeEmbed {
 
     static getThumbnailHTML(videoInfo) {
         return `
-            <img src="${videoInfo.thumbnailUrl}">
+            <img src="${videoInfo.thumbnailUrl}" alt="youtube playlist thumbnail">
             <div class="thumbnail-shadow"></div>
             <div class="video-title-overlay">
-                <img src="./images/youtube-pfp.png">
+                <img src="./images/youtube-pfp.png" alt="">
                 <span>${videoInfo.title}</span>
             </div>
             <div class="play"></div>
