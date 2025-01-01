@@ -30,8 +30,8 @@ class YouTubeEmbed {
 
         const params = new URLSearchParams({
             rel: '0',
-            autoplay: '1',
-            playsinline: '0',
+            autoplay: DeviceDetector.isMobile() ? '0' : '1',
+            playsinline: '1',
             fs: '1',
             enablejsapi: '1',
             mute: DeviceDetector.isMobile() ? '0' : '1'
@@ -40,7 +40,9 @@ class YouTubeEmbed {
         iframe.src = `${embedUrl}&${params}`;
         iframe.frameBorder = '0';
         iframe.allowFullscreen = true;
-        iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; fullscreen';
+        iframe.allow = DeviceDetector.isMobile() 
+            ? 'fullscreen' 
+            : 'autoplay; fullscreen';
         iframe.title = "Aarav Batra's Youtube Video Playlist";
 
         if (DeviceDetector.isIOS()) {
