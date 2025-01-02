@@ -775,13 +775,6 @@ main a:not(footer a):not(.navbar-menu-link):not(.button):hover {
     text-decoration: underline;
 }
 
-.grid-column img {
-    max-height: 400px;
-    width: auto;
-    margin: auto;
-    display: block;
-}
-
 #ifz46o, #ihw5s4, #if7r79, #i5zv4f {
     display: flex;
     align-items: center;
