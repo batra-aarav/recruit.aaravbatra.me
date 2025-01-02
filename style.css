@@ -261,20 +261,46 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
     justify-content: center;
 }
 
-#i6uktt, #i6d9dk, #in8c9c, #i190gh, #ir5lli, #iw5p96, #i466d, #imq8rh {
-    color: black;
+#i6uktt {
     border-radius: 35px;
     max-width: 100%;
     width: 100%;
-    height: auto;
-    object-fit: contain;
-    display: block;
+    min-height: 400px;
+    object-fit: cover;
     margin: 0 auto;
+}
+
+#ir5lli {
+    border-radius: 0;
+    max-width: 95%;
+    max-height: 550px;
+    min-height: 400px;
+    width: 100%;
+    object-fit: contain;
+    margin: auto;
+    display: block;
+}
+
+#i6d9dk {
+    border-radius: 20px;
+    max-width: 85%;
+    max-height: 400px;
+    object-fit: contain;
+    margin: auto;
+}
+
+#i190gh {
+    border-radius: 20px;
+    max-width: 85%;
+    max-height: 400px;
+    object-fit: contain;
+    margin: auto;
 }
 
 #im0vus, #iovg9t, #inz9gq, #ii1qn3, #ildka4, #i17xi9, #ibs7k2, #ib541, #iib8zm, #ilca1f, #i3yh6k, #isvwud {
     gap: 100px;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
 }
 
 #ic44sd, #isqg1q, #io3ieg, #ixe6xs, #ipgf3o, #iggmog, #iicdif, #imymf, #ii3hvi, #ivh6o3, #iq3teg, #i7fehi {
@@ -749,4 +775,29 @@ main a:not(footer a):not(.navbar-menu-link):not(.button):hover {
     align-items: center;
     justify-content: center;
     padding: 20px;
+}
+
+#ihw5s4, #if7r79 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    height: 100%;
+}
+
+#imq8rh {
+    border-radius: 35px;
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    margin: 0 auto;
+}
+
+#in8c9c {
+    border-radius: 35px;
+    max-width: 90%;
+    max-height: 450px;
+    object-fit: contain;
+    margin: 0 auto;
 }
