@@ -298,7 +298,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
 }
 
 #im0vus, #iovg9t, #inz9gq, #ii1qn3, #ildka4, #i17xi9, #ibs7k2, #ib541, #iib8zm, #ilca1f, #i3yh6k, #isvwud {
-    gap: 100px;
+    gap: 35px;
     justify-content: center;
     align-items: center;
 }
@@ -328,8 +328,8 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
 
 #itctvo, #iu5876, #i6acmp, #ivokzh, #ii0jo5, #i2a5o8, #ioyxg, #iv6scb {
     justify-content: center;
-    padding-top: 80px;
-    padding-bottom: 80px;
+    padding-top: 50px;
+    padding-bottom: 100px;
     padding-left: 20px;
     padding-right: 20px;
 }
@@ -603,7 +603,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
     z-index: 1;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
-    pointer-events: none; /* Allow clicks to pass through */
+    pointer-events: none;
 }
 
 .youtube-player::before {
@@ -698,6 +698,18 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
 @media (max-width: 992px) {
     .grid-row {
         flex-direction: column;
+    }
+    
+    #isvwud, #ildka4, #inz9gq {
+        flex-direction: column-reverse;
+    }
+    
+    .grid-row > .grid-column {
+        margin-bottom: 30px;
+    }
+    
+    #ifz46o, #ihw5s4, #if7r79, #i5zv4f {
+        padding: 10px 0;
     }
 }
 
