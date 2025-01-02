@@ -263,11 +263,13 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
 
 #i6uktt, #i6d9dk, #in8c9c, #i190gh, #ir5lli, #iw5p96, #i466d, #imq8rh {
     color: black;
-    border-top-left-radius: 35px;
-    border-top-right-radius: 35px;
-    border-bottom-right-radius: 35px;
-    border-bottom-left-radius: 35px;
+    border-radius: 35px;
     max-width: 100%;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
 }
 
 #im0vus, #iovg9t, #inz9gq, #ii1qn3, #ildka4, #i17xi9, #ibs7k2, #ib541, #iib8zm, #ilca1f, #i3yh6k, #isvwud {
@@ -733,4 +735,18 @@ main a:not(footer a):not(.navbar-menu-link):not(.button) {
 main a:not(footer a):not(.navbar-menu-link):not(.button):hover {
     color: #6a9030;
     text-decoration: underline;
+}
+
+.grid-column img {
+    max-height: 400px;
+    width: auto;
+    margin: auto;
+    display: block;
+}
+
+#ifz46o, #ihw5s4, #if7r79, #i5zv4f {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
