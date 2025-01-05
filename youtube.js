@@ -30,8 +30,8 @@ class YouTubeEmbed {
 
         const params = new URLSearchParams({
             rel: '0',
-            autoplay: DeviceDetector.isMobile() ? '0' : '1',
-            playsinline: '1',
+            autoplay: '1',
+            playsinline: '0',
             fs: '1',
             enablejsapi: '1',
             mute: DeviceDetector.isMobile() ? '0' : '1'
@@ -40,16 +40,15 @@ class YouTubeEmbed {
         iframe.src = `${embedUrl}&${params}`;
         iframe.frameBorder = '0';
         iframe.allowFullscreen = true;
-        iframe.allow = DeviceDetector.isMobile() 
-            ? 'fullscreen' 
-            : 'autoplay; fullscreen';
+        iframe.allow = 'autoplay; fullscreen';
         iframe.title = "Aarav Batra's Youtube Video Playlist";
 
-        if (DeviceDetector.isIOS()) {
-            this.setupIOSFullscreen(iframe);
-        } else if (!DeviceDetector.isMobile()) {
-            this.setupDesktopAutoplay(iframe, embedUrl);
-        }
+        // Add specific styling for fullscreen
+        iframe.style.position = 'absolute';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
 
         return iframe;
     }
@@ -128,7 +127,31 @@ class YouTubeEmbed {
     static handleThumbnailClick(container, videoId, type) {
         const iframe = this.createIframe(videoId, type);
         container.parentNode.replaceChild(iframe, container);
-        this.handleFullscreen(iframe);
+        
+        // Request fullscreen with a slight delay to ensure iframe is loaded
+        setTimeout(() => {
+            if (DeviceDetector.isIOS()) {
+                this.attemptIOSFullscreen(iframe);
+            } else {
+                // Try different fullscreen methods
+                const requestFullscreen = iframe.requestFullscreen 
+                    || iframe.webkitRequestFullscreen 
+                    || iframe.mozRequestFullScreen 
+                    || iframe.msRequestFullscreen;
+
+                if (requestFullscreen) {
+                    requestFullscreen.call(iframe).catch(err => {
+                        console.warn('[YouTubeEmbed] Fullscreen request failed:', err);
+                        // Fallback: try to make the parent element fullscreen
+                        const parent = iframe.parentElement;
+                        if (parent && parent.requestFullscreen) {
+                            parent.requestFullscreen().catch(e => 
+                                console.warn('[YouTubeEmbed] Parent fullscreen failed:', e));
+                        }
+                    });
+                }
+            }
+        }, 1000);
     }
 
     static handleFullscreen(element) {
