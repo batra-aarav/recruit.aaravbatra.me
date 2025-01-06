@@ -43,7 +43,6 @@ class YouTubeEmbed {
         iframe.allow = 'autoplay; fullscreen';
         iframe.title = "Aarav Batra's Youtube Video Playlist";
 
-        // Add specific styling for fullscreen
         iframe.style.position = 'absolute';
         iframe.style.top = '0';
         iframe.style.left = '0';
@@ -128,12 +127,10 @@ class YouTubeEmbed {
         const iframe = this.createIframe(videoId, type);
         container.parentNode.replaceChild(iframe, container);
         
-        // Request fullscreen with a slight delay to ensure iframe is loaded
         setTimeout(() => {
             if (DeviceDetector.isIOS()) {
                 this.attemptIOSFullscreen(iframe);
             } else {
-                // Try different fullscreen methods
                 const requestFullscreen = iframe.requestFullscreen 
                     || iframe.webkitRequestFullscreen 
                     || iframe.mozRequestFullScreen 
@@ -142,7 +139,6 @@ class YouTubeEmbed {
                 if (requestFullscreen) {
                     requestFullscreen.call(iframe).catch(err => {
                         console.warn('[YouTubeEmbed] Fullscreen request failed:', err);
-                        // Fallback: try to make the parent element fullscreen
                         const parent = iframe.parentElement;
                         if (parent && parent.requestFullscreen) {
                             parent.requestFullscreen().catch(e => 
