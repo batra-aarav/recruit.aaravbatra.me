@@ -40,7 +40,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
     max-width: 100%;
     display: inline-block;
     text-decoration: none;
-    color: #57F287;
+    color: #5865F2;
     transition: color 0.3s ease 0s;
 }
 
@@ -87,7 +87,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
 }
 
 .link:hover {
-    color: #6a9030;
+    color: #5865f2;
     text-decoration: underline;
 }
 
@@ -187,7 +187,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
 /* Feature Section IDs */
 #i5bcda, #ia5d7b, #ix35a6, #iroa68, #i8jeuj, #ita48s, #i7owfh, 
 #ircysl, #i32om3, #iosbyf, #iqza0j, #ifme48 {
-    color: #57F287;
+    color: #5865F2;
 }
 
 /* Content Section Containers */
@@ -356,7 +356,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
 }
 
 #ibz85h, #i1n5c1, #icoj64, #i798o3, #ik4mo1, #iu8a1k, #illxu, #ictxk, #ipmqo6, #iz4uwb, #iwgwt5, #i5uv5r, #itdgnt, #iqjddi {
-    background-color: #1c4508;
+    background-color: #5865F2;
 }
 
 #ie6jug, #iuq7hb, #iuwodg, #in9ef, #ix67kh, #ix76v4 {
@@ -494,7 +494,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
 }
 
 #i1ukje {
-    background-color: #1c4508;
+    background-color: #5865F2;
     align-self: flex-start;
     margin-top: 25px;
     margin-bottom: 25px;
@@ -516,7 +516,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
 }
 
 #isxv5c, #is1wi3 , #i3ykbu, #i0e0va, #i3t5fi, #inzoj6 {
-    color: #57F287;
+    color: #5865F2;
 }
 
 #iniheo, #igsh66, #iiqvsg, #id9omr, #inzdat {
@@ -691,7 +691,7 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
 }
 
 #ip05eo {
-    color:#1c4508;
+    color: #5865F2;
 }
 
 /* Media Queries */
@@ -765,13 +765,13 @@ footer .link:hover,
 }
 
 main a:not(footer a):not(.navbar-menu-link):not(.button) {
-    color: #57F287;
+    color: #5865F2;
     text-decoration: none;
     transition: color 0.3s ease 0s;
 }
 
 main a:not(footer a):not(.navbar-menu-link):not(.button):hover {
-    color: #6a9030;
+    color: #5865f2;
     text-decoration: underline;
 }
 
@@ -805,4 +805,141 @@ main a:not(footer a):not(.navbar-menu-link):not(.button):hover {
     max-height: 450px;
     object-fit: contain;
     margin: 0 auto;
+}
+
+.timeline {
+  position: relative;
+  padding: 20px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  width: 4px;
+  background: #5865F2;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.timeline-item {
+  width: calc(50% - 40px);
+  margin: 40px 0;
+  position: relative;
+  padding: 20px;
+  background-color: rgba(88, 101, 242, 0.1);
+  border-radius: 8px;
+  clear: both;
+}
+
+.timeline-item:nth-child(odd) {
+  float: left;
+  clear: both;
+}
+
+.timeline-item:nth-child(even) {
+  float: right;
+  clear: both;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  width: 20px;
+  height: 20px;
+  background: #5865F2;
+  border-radius: 50%;
+  border: 4px solid #36393f;
+  z-index: 2;
+}
+
+.timeline-item:nth-child(odd)::before {
+  right: -50px;
+}
+
+.timeline-item:nth-child(even)::before {
+  left: -50px;
+}
+
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  top: 27px;
+  width: 30px;
+  height: 4px;
+  background: #5865F2;
+  z-index: 1;
+}
+
+.timeline-item:nth-child(odd)::after {
+  right: -30px;
+}
+
+.timeline-item:nth-child(even)::after {
+  left: -30px;
+}
+
+.timeline-item h3 {
+  margin-bottom: 5px;
+  color: #ffffff;
+  font-size: 1.4rem;
+}
+
+.timeline-content {
+  margin-top: 10px;
+  color: #ffffff;
+}
+
+.timeline-content a {
+  color: #5865F2;
+  text-decoration: none;
+}
+
+.timeline-content a:hover {
+  text-decoration: underline;
+  color: #5865F2;
+}
+
+.timeline-item .text-blue {
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.timeline-image {
+  width: 100%;
+  height: 250px;  /* Increased height to better show full images */
+  object-fit: contain;  /* Changed from cover to contain */
+  border-radius: 8px;
+  margin: 15px 0;
+  background-color: rgba(88, 101, 242, 0.05); /* Slight background to see image bounds */
+}
+
+@media (max-width: 768px) {
+  .timeline::before {
+    left: 30px;
+  }
+  
+  .timeline-item {
+    width: calc(100% - 80px);
+    margin: 30px 0 30px 60px;
+  }
+  
+  .timeline-item:nth-child(odd),
+  .timeline-item:nth-child(even) {
+    float: none;
+  }
+  
+  .timeline-item::before {
+    left: -45px;
+  }
+  
+  .timeline-item::after {
+    left: -30px;
+  }
 }
