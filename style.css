@@ -3,6 +3,11 @@
     box-sizing: border-box;
 }
 
+html {
+    background-color: #36393f;
+    min-height: 100%;
+}
+
 body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
@@ -13,6 +18,13 @@ body, #i8j1hi, #izr5td, #ia861u, #i3r2qj, #ikyqdi {
     background-attachment: scroll;
     background-origin: padding-box;
     color: #475569;
+    background-color: #36393f;
+    min-height: 100vh;
+}
+
+/* Override any potential white backgrounds */
+html, body, main {
+    background-color: #36393f !important;
 }
 
 /* Common Components */
